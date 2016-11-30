@@ -41,6 +41,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     
     private var overlayView: OverlayView?
     private(set) var contentView: UIView?
+    private(set) var parentView: UIView?
     
     private var panGestureRecognizer: UIPanGestureRecognizer!
     private var tapGestureRecognizer: UITapGestureRecognizer!
