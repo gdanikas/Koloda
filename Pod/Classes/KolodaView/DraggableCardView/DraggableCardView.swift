@@ -48,6 +48,7 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     private var dragBegin = false
     private var dragDistance = CGPoint.zero
     private var swipePercentageMargin: CGFloat = 0.0
+    private var initialOriginY: CGFloat = 0.0
     
     //MARK: Lifecycle
     init() {
@@ -62,7 +63,14 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.initialOriginY = frame.origin.y
+        
         setup()
+    }
+    
+    convenience init(frame: CGRect, parentView: UIView? = nil) {
+        self.init(frame: frame)
+        self.parentView = parentView
     }
     
     override public var frame: CGRect {
@@ -72,6 +80,8 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             } else {
                 swipePercentageMargin = 1.0
             }
+            
+            initialOriginY = frame.origin.y
         }
     }
     
@@ -213,6 +223,16 @@ public class DraggableCardView: UIView, UIGestureRecognizerDelegate {
             layer.shouldRasterize = true
             
         case .changed:
+            
+            if let parentView = parentView {
+                if initialOriginY + dragDistance.y < 0 {
+                    dragDistance.y = -initialOriginY - 10.0
+                }
+                else if initialOriginY + frame.size.height + dragDistance.y > parentView.frame.size.height {
+                    dragDistance.y = initialOriginY + 10.0 + parentView.frame.size.height - initialOriginY - frame.size.height
+                }
+            }
+            
             let rotationStrength = min(dragDistance.x / frame.width, rotationMax)
             let rotationAngle = animationDirectionY * defaultRotationAngle * rotationStrength
             let scaleStrength = 1 - ((1 - scaleMin) * fabs(rotationStrength))

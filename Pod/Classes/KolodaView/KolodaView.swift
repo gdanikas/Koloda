@@ -82,6 +82,8 @@ open class KolodaView: UIView, DraggableCardDelegate {
     public var alphaValueSemiTransparent = defaultAlphaValueSemiTransparent
     public var shouldPassthroughTapsWhenNoVisibleCards = false
     
+    public var parentView: UIView?
+    
     public weak var dataSource: KolodaViewDataSource? {
         didSet {
             setupDeck()
@@ -124,7 +126,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
                 
                 for index in 0..<countOfNeededCards {
                     let actualIndex = index + currentCardIndex
-                    let nextCardView = createCard(at: actualIndex)
+                    let nextCardView = createCard(at: actualIndex, inView: parentView)
                     let isTop = index == 0
                     nextCardView.isUserInteractionEnabled = isTop
                     nextCardView.alpha = alphaValueOpaque
@@ -358,7 +360,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
         
         let cardParameters = backgroundCardParametersForFrame(frameForCard(at: visibleCards.count))
-        let lastCard = createCard(at: currentCardIndex + countOfVisibleCards - 1, frame: cardParameters.frame)
+        let lastCard = createCard(at: currentCardIndex + countOfVisibleCards - 1, inView: parentView, frame: cardParameters.frame)
         
         let scale = cardParameters.scale
         lastCard.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1)
@@ -418,7 +420,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
             currentCardIndex -= 1
             
             if dataSource != nil {
-                let firstCardView = createCard(at: currentCardIndex, frame: frameForTopCard())
+                let firstCardView = createCard(at: currentCardIndex, inView: parentView, frame: frameForTopCard())
                 
                 if shouldTransparentizeNextCard {
                     firstCardView.alpha = alphaValueTransparent
@@ -564,7 +566,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
     private func insertVisibleCardsWithIndexes(_ visibleIndexes: [Int]) -> [DraggableCardView] {
         var insertedCards: [DraggableCardView] = []
         visibleIndexes.forEach { insertionIndex in
-            let card = createCard(at: insertionIndex)
+            let card = createCard(at: insertionIndex, inView: parentView)
             let visibleCardIndex = insertionIndex - currentCardIndex
             visibleCards.insert(card, at: visibleCardIndex)
             if visibleCardIndex == 0 {
