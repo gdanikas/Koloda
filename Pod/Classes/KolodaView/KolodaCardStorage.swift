@@ -11,23 +11,23 @@ import UIKit
 
 extension KolodaView {
     
-    func createCardAtIndex(index: UInt, frame: CGRect? = nil) -> DraggableCardView {
-        let cardView = generateCard(frame ?? frameForTopCard())
-        configureCard(cardView, atIndex: index)
+    func createCard(at index: Int, inView parentView: UIView? = nil, withFrame frame: CGRect? = nil) -> DraggableCardView {
+        let cardView = generateCard(frame ?? frameForTopCard(), inView: parentView)
+        configureCard(cardView, at: index)
         
         return cardView
     }
     
-    func generateCard(frame: CGRect) -> DraggableCardView {
-        let cardView = DraggableCardView(frame: frame)
+    func generateCard(_ frame: CGRect, inView parentView: UIView? = nil) -> DraggableCardView {
+        let cardView = DraggableCardView(frame: frame, parentView: parentView)
         cardView.delegate = self
         
         return cardView
     }
     
-    func configureCard(card: DraggableCardView, atIndex index: UInt) {
-        let contentView = dataSource!.koloda(self, viewForCardAtIndex: index)
-        card.configure(contentView, overlayView: dataSource?.koloda(self, viewForCardOverlayAtIndex: index))
+    func configureCard(_ card: DraggableCardView, at index: Int) {
+        let contentView = dataSource!.koloda(self, viewForCardAt: index)
+        card.configure(contentView, overlayView: dataSource?.koloda(self, viewForCardOverlayAt: index))
     }
     
 }
