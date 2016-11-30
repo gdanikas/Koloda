@@ -360,7 +360,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
         }
         
         let cardParameters = backgroundCardParametersForFrame(frameForCard(at: visibleCards.count))
-        let lastCard = createCard(at: currentCardIndex + countOfVisibleCards - 1, inView: parentView, frame: cardParameters.frame)
+        let lastCard = createCard(at: currentCardIndex + countOfVisibleCards - 1, inView: parentView, withFrame: cardParameters.frame)
         
         let scale = cardParameters.scale
         lastCard.layer.transform = CATransform3DScale(CATransform3DIdentity, scale.width, scale.height, 1)
@@ -420,7 +420,7 @@ open class KolodaView: UIView, DraggableCardDelegate {
             currentCardIndex -= 1
             
             if dataSource != nil {
-                let firstCardView = createCard(at: currentCardIndex, inView: parentView, frame: frameForTopCard())
+                let firstCardView = createCard(at: currentCardIndex, inView: parentView, withFrame: frameForTopCard())
                 
                 if shouldTransparentizeNextCard {
                     firstCardView.alpha = alphaValueTransparent
